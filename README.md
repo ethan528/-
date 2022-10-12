@@ -1,1 +1,1 @@
-# hand_gesture_classification_competition
+# 손동작 분류 경진대회
