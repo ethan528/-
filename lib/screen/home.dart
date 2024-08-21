@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:reading_buddy/model/Book.dart';
+import 'package:reading_buddy/service/databaseSvc.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,6 +18,12 @@ class _HomeScreenState extends State<HomeScreen> {
     // TODO: implement initState
     super.initState();
     prepareBookList();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 
   @override
@@ -38,13 +45,24 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void prepareBookList() {
-    for (int i = 0; i < 5; i++) {
-      var book = Book();
-      book.name = 'Book $i';
-      book.imgUrl = 'https://picsum.photos/id/10$i/200/200';
-      books.add(book);
+  void updateUIWithBooks(List<Book> newBooks) {
+    if (mounted) {
+      setState(() {
+        books = newBooks;
+      });
     }
+  }
+
+  void prepareBookList() {
+    DatabaseSvc().readDB(updateUIWithBooks);
+
+    // for (int i = 0; i < 5; i++) {
+    //   var name = 'Book $i';
+    //   var imgUrl = 'https://picsum.photos/id/10$i/200/200';
+    //   var book = Book(name: name, imgUrl: imgUrl);
+    //
+    //   books.add(book);
+    // }
   }
 
   _buildBookList(BuildContext context, List<Book> books) {

@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "286765346546",
+    "firebase_url": "https://reading-buddy-2396e-default-rtdb.firebaseio.com",
+    "project_id": "reading-buddy-2396e",
+    "storage_bucket": "reading-buddy-2396e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:286765346546:android:6947da96f80c6ffbbd6a6b",
+        "android_client_info": {
+          "package_name": "com.example.readingbuddy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQISI1uuN0uJAj5fAAh_xi0v40g_kxcAo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

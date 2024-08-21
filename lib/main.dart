@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:reading_buddy/screen/home.dart';
+import 'package:reading_buddy/screen/search.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -17,7 +25,7 @@ class _MyAppState extends State<MyApp> {
 
   final List<Widget> screens = [
     const HomeScreen(),
-    const HomeScreen(),
+    const SearchScreen(),
   ];
 
   @override
@@ -32,8 +40,8 @@ class _MyAppState extends State<MyApp> {
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home2',
+              icon: Icon(Icons.search),
+              label: 'Search',
             )
           ],
           currentIndex: currentIndex,
