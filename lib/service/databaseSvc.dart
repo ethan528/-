@@ -49,7 +49,7 @@ class DatabaseSvc {
     starCountRef.onValue.listen((DatabaseEvent event) {
       final data = event.snapshot.value;
 
-      if (data == null || data is! Map<dynamic, dynamic>) {
+      if (data == null || data is !Map<dynamic, dynamic>) {
         print('no data');
         return;
       }
@@ -58,6 +58,7 @@ class DatabaseSvc {
       for (final key in data.keys) {
         final bookValue = data[key];
         final book = Book.fromMap(bookValue);
+        books.add(book);
       }
 
       updateUIWithBooks(books);
