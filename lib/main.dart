@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:reading_buddy/screen/home.dart';
+import 'package:reading_buddy/screen/login.dart';
 import 'package:reading_buddy/screen/search.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:reading_buddy/screen/splash.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -10,7 +12,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(const SplashScreen());
 }
 
 class MyApp extends StatefulWidget {
@@ -34,7 +36,7 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         body: screens[currentIndex],
         bottomNavigationBar: BottomNavigationBar(
-          items: [
+          items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: 'Home',

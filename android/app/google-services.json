@@ -8,12 +8,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:286765346546:android:6947da96f80c6ffbbd6a6b",
+        "mobilesdk_app_id": "1:286765346546:android:6222be7b774b3926bd6a6b",
         "android_client_info": {
-          "package_name": "com.example.readingbuddy"
+          "package_name": "com.example.reading_buddy"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "286765346546-2i6ph5s8qrop033t56e7s5a5n6fvs108.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAQISI1uuN0uJAj5fAAh_xi0v40g_kxcAo"
@@ -21,7 +26,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "286765346546-2i6ph5s8qrop033t56e7s5a5n6fvs108.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "286765346546-k465duanqbn6434j4o5kvuinaij68ab2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.readingBuddy"
+              }
+            }
+          ]
         }
       }
     }
