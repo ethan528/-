@@ -1,6 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:reading_buddy/model/Book.dart';
+import 'package:reading_buddy/screen/login.dart';
 import 'package:reading_buddy/service/databaseSvc.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -31,6 +33,28 @@ class _HomeScreenState extends State<HomeScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  const SizedBox(
+                    height: 120,
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      FirebaseAuth.instance.signOut().then((value) {
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (context) => const Login(),
+                        ));
+                      }).onError((error, stackTrace) {
+                        print('logout failed $error');
+                      });
+                    },
+                    icon: const Icon(
+                      Icons.logout,
+                    ),
+                  ),
+                ],
+              ),
               Container(
                 height: MediaQuery.of(context).size.height * 0.8,
                 alignment: Alignment.center,

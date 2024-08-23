@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:reading_buddy/model/Book.dart';
 
@@ -29,8 +30,9 @@ class DatabaseSvc {
   }
 
   Future<void> writeDB(Book book) async {
+    var uid = FirebaseAuth.instance.currentUser?.uid ?? 'userId';
     DatabaseReference ref =
-        FirebaseDatabase.instance.ref('bookshelf/userId/${book.bookKey}');
+        FirebaseDatabase.instance.ref('bookshelf/$uid/${book.bookKey}');
 
     await ref.set({
       'name': book.name,
@@ -44,8 +46,9 @@ class DatabaseSvc {
   }
 
   void readDB(void Function(List<Book> newBooks) updateUIWithBooks) {
+    var uid = FirebaseAuth.instance.currentUser?.uid ?? 'userId';
     DatabaseReference starCountRef =
-        FirebaseDatabase.instance.ref('bookshelf/userId');
+        FirebaseDatabase.instance.ref('bookshelf/$uid');
     starCountRef.onValue.listen((DatabaseEvent event) {
       final data = event.snapshot.value;
 
@@ -62,6 +65,6 @@ class DatabaseSvc {
       }
 
       updateUIWithBooks(books);
-    });
+    }).cancel();
   }
 }

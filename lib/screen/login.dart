@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:reading_buddy/main.dart';
 
@@ -18,6 +19,10 @@ class _LoginState extends State<Login> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Text(
+              'Reading Buddy',
+              style: GoogleFonts.getFont('Fuggles', fontSize: 40),
+            ),
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -30,21 +35,41 @@ class _LoginState extends State<Login> {
                         borderRadius: BorderRadius.circular(7),
                       ),
                       elevation: 2,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset('images/google_icon.png'),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          const Text(
-                            'Sign In With Google',
-                            style: TextStyle(color: Colors.grey, fontSize: 17),
-                          )
-                        ],
+                      child: Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(7),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              'images/google_icon.png',
+                              height: 30,
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            const Text(
+                              'Sign In With Google',
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 17),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  InkWell(
+                      onTap: () => signInAnonymously(),
+                      child: const Text(
+                        'Without Sign In',
+                        style: TextStyle(color: Colors.grey, fontSize: 17),
+                      )),
                 ],
               ),
             ),
@@ -52,6 +77,24 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+
+  Future<void> signInAnonymously() async {
+    try {
+      final userCredential = await FirebaseAuth.instance.signInAnonymously();
+      print("userCredential $userCredential");
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => const MyApp(),
+      ));
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case "operation-not-allowed":
+          print("Anonymous auth hasn't been enabled for this project.");
+          break;
+        default:
+          print("Unknown error.");
+      }
+    }
   }
 
   void signInWithGoogle() async {
@@ -70,7 +113,7 @@ class _LoginState extends State<Login> {
 
     // Once signed in, return the UserCredential
     await FirebaseAuth.instance.signInWithCredential(credential).then((value) {
-      print(value.user?.email);
+      print(value.user?.uid);
       Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (context) => const MyApp(),
       ));
