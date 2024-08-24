@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:reading_buddy/model/Book.dart';
 import 'package:reading_buddy/screen/login.dart';
 import 'package:reading_buddy/service/databaseSvc.dart';
@@ -26,9 +29,35 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
+  Future<void> logout() async {
+    bool logoutSuccessful = false;
+
+    try {
+      await UserApi.instance.logout();
+      logoutSuccessful = true;
+      print('로그아웃 성공, SDK에서 토큰 삭제');
+    } catch (error) {
+      print('로그아웃 실패, SDK에서 토큰 삭제 $error');
+    }
+
+    try {
+      FirebaseAuth.instance.signOut();
+      logoutSuccessful = true;
+    } catch (error) {
+      print('Firebase 로그아웃 실패: $error');
+    }
+
+    if (logoutSuccessful) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => const Login(),
+      ));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: SingleChildScrollView(
           child: Column(
@@ -40,15 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 120,
                   ),
                   IconButton(
-                    onPressed: () {
-                      FirebaseAuth.instance.signOut().then((value) {
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => const Login(),
-                        ));
-                      }).onError((error, stackTrace) {
-                        print('logout failed $error');
-                      });
-                    },
+                    onPressed: () => logout(),
                     icon: const Icon(
                       Icons.logout,
                     ),
