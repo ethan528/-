@@ -6,9 +6,10 @@ class DatabaseSvc {
   DatabaseReference ref = FirebaseDatabase.instance.ref();
 
   void deleteDB(Book book) {
+    var uid = FirebaseAuth.instance.currentUser?.uid ?? 'userId';
     final bookKeyRef = FirebaseDatabase.instance
         .ref()
-        .child('bookshelf/userId/${book.bookKey}');
+        .child('bookshelf/$uid/${book.bookKey}');
 
     bookKeyRef.remove();
   }
@@ -18,9 +19,10 @@ class DatabaseSvc {
       'imgUrl': book.imgUrl,
     };
 
+    var uid = FirebaseAuth.instance.currentUser?.uid ?? 'userId';
     final bookKeyRef = FirebaseDatabase.instance
         .ref()
-        .child('bookshelf/userId/${book.bookKey}');
+        .child('bookshelf/$uid/${book.bookKey}');
 
     bookKeyRef.update(bookData).then((_) {
       print('Data update successful');
@@ -52,7 +54,7 @@ class DatabaseSvc {
     starCountRef.onValue.listen((DatabaseEvent event) {
       final data = event.snapshot.value;
 
-      if (data == null || data is !Map<dynamic, dynamic>) {
+      if (data == null || data is! Map<dynamic, dynamic>) {
         print('no data');
         return;
       }
@@ -65,6 +67,6 @@ class DatabaseSvc {
       }
 
       updateUIWithBooks(books);
-    }).cancel();
+    });
   }
 }

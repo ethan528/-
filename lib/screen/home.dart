@@ -1,12 +1,13 @@
-import 'dart:math';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:reading_buddy/model/Book.dart';
 import 'package:reading_buddy/screen/login.dart';
+import 'package:reading_buddy/service/adHelper.dart';
 import 'package:reading_buddy/service/databaseSvc.dart';
+import 'package:reading_buddy/widget/MyBannerAdWidget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -21,12 +22,39 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    _loadInterstitialAd();
     prepareBookList();
+  }
+
+  // TODO: Add _interstitialAd
+  InterstitialAd? _interstitialAd;
+
+  // TODO: Implement _loadInterstitialAd()
+  void _loadInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: AdHelper.interstitialAdUnitId,
+      request: const AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) {
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+            onAdDismissedFullScreenContent: (ad) {},
+          );
+
+          setState(() {
+            _interstitialAd = ad;
+          });
+        },
+        onAdFailedToLoad: (err) {
+          print('Failed to load an interstitial ad: ${err.message}');
+        },
+      ),
+    );
   }
 
   @override
   void dispose() {
     super.dispose();
+    _interstitialAd?.dispose();
   }
 
   Future<void> logout() async {
@@ -62,6 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
+              MyBannerAdWidget(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -74,10 +103,18 @@ class _HomeScreenState extends State<HomeScreen> {
                       Icons.logout,
                     ),
                   ),
+                  IconButton(
+                    onPressed: () {
+                      if (_interstitialAd != null) {
+                        _interstitialAd?.show();
+                      }
+                    },
+                    icon: const Icon(Icons.tv_rounded),
+                  )
                 ],
               ),
               Container(
-                height: MediaQuery.of(context).size.height * 0.8,
+                height: MediaQuery.of(context).size.height * 0.4,
                 alignment: Alignment.center,
                 child: _buildBookList(context, books),
               )

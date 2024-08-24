@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:reading_buddy/model/Book.dart';
+import 'package:reading_buddy/service/adHelper.dart';
 import 'package:reading_buddy/service/bookApi.dart';
 import 'package:reading_buddy/service/databaseSvc.dart';
 import 'package:reading_buddy/widget/bookCoverBox.dart';
@@ -14,12 +16,14 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   List<Book> books = [];
   final TextEditingController _searchController = TextEditingController();
-  bool _isLoading = true;
+  bool _isLoading = false;
+  bool showLatestBookRecommendation = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _loadRewardedAd();
   }
 
   Future<void> searchBook(String keyword) async {
@@ -35,6 +39,37 @@ class _SearchScreenState extends State<SearchScreen> {
     });
   }
 
+  // TODO: Add _rewardedAd
+  RewardedAd? _rewardedAd;
+
+  // TODO: Implement _loadRewardedAd()
+  void _loadRewardedAd() {
+    RewardedAd.load(
+      adUnitId: AdHelper.rewardedAdUnitId,
+      request: const AdRequest(),
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
+        onAdLoaded: (ad) {
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+            onAdDismissedFullScreenContent: (ad) {
+              setState(() {
+                ad.dispose();
+                _rewardedAd = null;
+              });
+              _loadRewardedAd();
+            },
+          );
+
+          setState(() {
+            _rewardedAd = ad;
+          });
+        },
+        onAdFailedToLoad: (err) {
+          print('Failed to load a rewarded ad: ${err.message}');
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,6 +81,22 @@ class _SearchScreenState extends State<SearchScreen> {
       body: SafeArea(
         child: Column(
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    _rewardedAd?.show(
+                      onUserEarnedReward: (_, reward) {
+                        showLatestBookRecommendation = true;
+                      },
+                    );
+                  },
+                  icon: const Icon(Icons.gif_box),
+                ),
+                if (showLatestBookRecommendation) const Text('최근 뜨는 책! : 호모데우스'),
+              ],
+            ),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Row(

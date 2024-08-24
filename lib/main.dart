@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:reading_buddy/screen/home.dart';
 import 'package:reading_buddy/screen/search.dart';
@@ -19,6 +22,9 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+
+  unawaited(MobileAds.instance.initialize());
 
   runApp(const SplashScreen());
 }
