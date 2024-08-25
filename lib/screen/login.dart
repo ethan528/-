@@ -1,10 +1,18 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:reading_buddy/main.dart';
+import 'package:http/http.dart' as http;
+import 'package:uni_links/uni_links.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -14,6 +22,20 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initUniLinks();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,6 +86,7 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                   getKakaoLoginButton(),
+                  getNaverLoginButton(),
                   const SizedBox(
                     height: 20,
                   ),
@@ -82,6 +105,32 @@ class _LoginState extends State<Login> {
     );
   }
 
+  Widget getNaverLoginButton() {
+    return InkWell(
+      onTap: () => signInWithNaver(),
+      child: Card(
+        margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(7),
+        ),
+        elevation: 2,
+        child: Ink.image(
+          image: const AssetImage('images/naver.png'),
+          fit: BoxFit.cover,
+          height: 50,
+          width: double.infinity,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(7),
+              color: Colors.transparent,
+            ),
+            child: null,
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget getKakaoLoginButton() {
     return InkWell(
       onTap: () => signInWithKakao(),
@@ -91,28 +140,17 @@ class _LoginState extends State<Login> {
           borderRadius: BorderRadius.circular(7),
         ),
         elevation: 2,
-        child: Container(
+        child: Ink.image(
+          image: const AssetImage('images/kakao.png'),
+          fit: BoxFit.cover,
           height: 50,
-          decoration: BoxDecoration(
-            color: Colors.yellow,
-            borderRadius: BorderRadius.circular(7),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'images/kakao.png',
-                // height: 30,
-              ),
-              // const SizedBox(
-              //   width: 10,
-              // ),
-              // const Text(
-              //   'Sign In With Kakao',
-              //   style:
-              //   TextStyle(color: Colors.grey, fontSize: 17),
-              // )
-            ],
+          width: double.infinity,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(7),
+              color: Colors.transparent,
+            ),
+            child: null,
           ),
         ),
       ),
@@ -141,6 +179,56 @@ class _LoginState extends State<Login> {
     Navigator.of(context).pushReplacement(MaterialPageRoute(
       builder: (context) => const MyApp(),
     ));
+  }
+
+  Future<void> fetchNaverUserDetail(String accessToken) async {
+    final response = await http.get(
+      Uri.parse('https://openapi.naver.com/v1/nid/me'),
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer $accessToken',
+      },
+    );
+    final responseJson = jsonDecode(response.body) as Map<String, dynamic>;
+    print('value from server $responseJson');
+  }
+
+  Future<void> signInWithNaver() async {
+    String clientId = '9o7ybbIrVq4cm5lDGXX1';
+    String redirectUri = 'https://us-central1-reading-buddy-2396e.cloudfunctions.net/naverLoginCallBack';
+    String state = base64Url.encode(
+        List<int>.generate(16, (_) => Random().nextInt(255)));
+    Uri url = Uri.parse(
+        'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=$clientId&state=$state&redirect_uri=$redirectUri');
+    print('네이버 로그인 열기 & 클라우드 펑션 부름');
+    await launchUrl(url);
+  }
+
+  Future<void> initUniLinks() async {
+    final initialLink = await getInitialLink();
+    if (initialLink != null) _handleDeepLink(initialLink);
+
+    linkStream.listen((String? link) {
+      _handleDeepLink(link!);
+    }, onError: (err, stackTrace) {
+      print('딥링크 에러 $err\n$stackTrace');
+    });
+  }
+
+
+  Future<void> _handleDeepLink(String link) async {
+    print('딥링크 열기 $link');
+    final Uri uri = Uri.parse(link);
+
+    if (uri.authority == 'login-callback') {
+      String? firebaseToken = uri.queryParameters['firebaseToken'];
+      String? name = uri.queryParameters['name'];
+      String? profileImage = uri.queryParameters['profileImage'];
+
+      print('name $name');
+      await FirebaseAuth.instance.signInWithCustomToken(firebaseToken!).then((value) => navigateToMainPage()).onError((error, stackTrace) {
+        print('error $error');
+      });
+    }
   }
 
   Future<void> signInWithKakao() async {

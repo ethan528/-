@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:reading_buddy/model/Book.dart';
@@ -57,11 +58,23 @@ class _HomeScreenState extends State<HomeScreen> {
     _interstitialAd?.dispose();
   }
 
+  Future<void> naverLogout() async {
+    try {
+      await FlutterNaverLogin.logOutAndDeleteToken().then((value) {
+        print('logout successful');
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => const Login(),
+        ));
+      });
+    } catch (error) {}
+  }
+
   Future<void> logout() async {
     bool logoutSuccessful = false;
 
     try {
       await UserApi.instance.logout();
+      await naverLogout();
       logoutSuccessful = true;
       print('로그아웃 성공, SDK에서 토큰 삭제');
     } catch (error) {
