@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:reading_buddy/model/Book.dart';
+import 'package:flutter_reading_buddy/model/Book.dart';
 
 class DatabaseSvc {
   DatabaseReference ref = FirebaseDatabase.instance.ref();

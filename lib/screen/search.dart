@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:reading_buddy/model/Book.dart';
-import 'package:reading_buddy/service/adHelper.dart';
-import 'package:reading_buddy/service/bookApi.dart';
-import 'package:reading_buddy/service/databaseSvc.dart';
-import 'package:reading_buddy/widget/bookCoverBox.dart';
+import 'package:flutter_reading_buddy/model/Book.dart';
+import 'package:flutter_reading_buddy/service/adHelper.dart';
+import 'package:flutter_reading_buddy/service/bookApi.dart';
+import 'package:flutter_reading_buddy/service/databaseSvc.dart';
+import 'package:flutter_reading_buddy/widget/bookCoverBox.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});

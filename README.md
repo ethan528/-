@@ -1,4 +1,4 @@
-# reading_buddy
+# flutter_reading_buddy
 
 A new Flutter project.
 

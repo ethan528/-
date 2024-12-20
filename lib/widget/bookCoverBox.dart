@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:reading_buddy/model/Book.dart';
-import 'package:reading_buddy/service/databaseSvc.dart';
+import 'package:flutter_reading_buddy/model/Book.dart';
+import 'package:flutter_reading_buddy/service/databaseSvc.dart';
 
 class BookCoverBox extends StatefulWidget {
   final String name;

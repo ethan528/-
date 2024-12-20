@@ -9,7 +9,7 @@ import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
-import 'package:reading_buddy/main.dart';
+import 'package:flutter_reading_buddy/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:uni_links/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';

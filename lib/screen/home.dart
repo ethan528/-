@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
-import 'package:reading_buddy/model/Book.dart';
-import 'package:reading_buddy/screen/login.dart';
-import 'package:reading_buddy/service/adHelper.dart';
-import 'package:reading_buddy/service/databaseSvc.dart';
-import 'package:reading_buddy/widget/MyBannerAdWidget.dart';
+import 'package:flutter_reading_buddy/model/Book.dart';
+import 'package:flutter_reading_buddy/screen/login.dart';
+import 'package:flutter_reading_buddy/service/adHelper.dart';
+import 'package:flutter_reading_buddy/service/databaseSvc.dart';
+import 'package:flutter_reading_buddy/widget/MyBannerAdWidget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

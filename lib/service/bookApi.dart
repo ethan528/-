@@ -1,4 +1,4 @@
-import 'package:reading_buddy/model/Book.dart';
+import 'package:flutter_reading_buddy/model/Book.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 

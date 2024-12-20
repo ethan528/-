@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:reading_buddy/main.dart';
-import 'package:reading_buddy/screen/login.dart';
+import 'package:flutter_reading_buddy/main.dart';
+import 'package:flutter_reading_buddy/screen/login.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
